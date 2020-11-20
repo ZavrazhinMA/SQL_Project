@@ -168,7 +168,7 @@ CREATE TABLE meters_reading
 (
 id SERIAL COMMENT 'Идентификатор показаний',
 metering_device_id BIGINT UNSIGNED COMMENT 'Ссылка на прибор учета',
-meters_reading DECIMAL(8,2) UNSIGNED NOT NULL COMMENT 'Показания прибора учета',
+meters_reading DECIMAL(9,2) NOT NULL COMMENT 'Показания прибора учета', -- могут быть отрицательными для перерасчетов
 accounting_period DATE NOT NULL COMMENT 'Расчетный период',
 created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата внесения изменений',
@@ -182,13 +182,14 @@ id SERIAL PRIMARY KEY COMMENT 'Идентификатор расчета за э
 personal_account_id BIGINT UNSIGNED NOT NULL COMMENT 'Ссылка на лицевой счет',
 accounting_type_id BIGINT UNSIGNED NOT NULL COMMENT 'Ссылка на тип расчетов за э/э',
 accounting_period DATE NOT NULL COMMENT 'Расчетный период',
-energy_demand DECIMAL(8,2) NOT NULL COMMENT 'Объем потребления', -- может быть отрицательным для перерасчетов
-individual_use_charge DECIMAL(6,2) UNSIGNED NOT NULL COMMENT 'Начисления плтаты за э/э по покозаниемя ИПУ или по нормативу',
-communal_use_charge DECIMAL(6,2) UNSIGNED NOT NULL COMMENT 'Начисления плтаты за э/э на общедомовые нужды',
-total_charge DECIMAL(7,2)  AS (individual_use_charge + communal_use_charge) COMMENT 'Начисления плтаты за э/э итоговое',
+individual_energy_demand DECIMAL(8,2) NOT NULL COMMENT 'Объем потребления по показаниям ПУ', -- может быть отрицательным для перерасчетов
+communal_energy_demand DECIMAL(8,2) NOT NULL DEFAULT 0 COMMENT 'Объем потребления э/э на общедомовые нужды', -- может быть отрицательным для перерасчетов
+individual_use_charge DECIMAL(8,2) NOT NULL COMMENT 'Начисления плтаты за э/э по покозаниемя ИПУ или по нормативу',  -- может быть отрицательным для перерасчетов
+communal_use_charge DECIMAL(8,2) NOT NULL DEFAULT 0 COMMENT 'Начисления плтаты за э/э на общедомовые нужды',  -- может быть отрицательным для перерасчетов
+total_charge DECIMAL(9,2)  AS (individual_use_charge + communal_use_charge) COMMENT 'Начисления плтаты за э/э итоговое',
 created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата внесения изменений',
-KEY energy_accounting_energy_demand_idx (energy_demand),
+KEY energy_accounting_energy_demand_idx (individual_energy_demand),
 KEY energy_accounting_total_charge_idx (total_charge)
 ) COMMENT 'Таблица расчетов платы за э/э ';
 
