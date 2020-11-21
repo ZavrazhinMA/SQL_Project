@@ -158,7 +158,7 @@ CREATE TABLE standards_consumption
 (
 id SERIAL PRIMARY KEY COMMENT 'Идентификатор норматива',
 description VARCHAR(100) COMMENT 'Описание норматива',
-normative_rate FLOAT(5,2) UNSIGNED NOT NULL COMMENT 'Норматив потребления электроэнергии, кВтч/чел',
+normative_rate DECIMAL(5,2) UNSIGNED NOT NULL COMMENT 'Норматив потребления электроэнергии, кВтч/чел',
 created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата внесения изменений'
 ) COMMENT 'Таблица нормативов потребления электроэнергии';
